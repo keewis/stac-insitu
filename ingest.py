@@ -13,7 +13,7 @@ from rich.progress import track
 os.environ.update(
     {
         "PGHOST": "127.0.0.1",
-        "PGPORT": "5432",
+        "PGPORT": "5439",
         "PGUSER": "username",
         "PGPASSWORD": "password",
         "PGDATABASE": "postgis",

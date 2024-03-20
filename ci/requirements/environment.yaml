@@ -1,0 +1,23 @@
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.11
+  # stac
+  - pystac
+  - pystac-client
+  # data loading and processing
+  - xarray
+  - xpystac
+  - xstac
+  - numpy
+  - h5netcdf
+  - pandas
+  - geopandas
+  - movingpandas
+  - shapely
+  - fsspec
+  # visualization
+  - folium
+  - hvplot
+  - geoviews
+  - datashader

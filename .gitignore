@@ -4,9 +4,15 @@
 
 # python byte code
 *.py[cod]
+# python install artifacts
+*.egg-info/
 
 # all json files
 *.json
 
 # jupyter cache directories
 .ipynb_checkpoints/
+
+# tool cache directories
+/.prettier_cache/
+/.pytest_cache/

@@ -1,0 +1,33 @@
+[project]
+name = "stac-insitu"
+requires-python = ">= 3.11"
+license = {text = "Apache-2.0"}
+dependencies = [
+    "pystac",
+    "geopandas",
+    "movingpandas",
+    "pandas",
+    "shapely",
+    "toolz",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+visualization = ["folium"]
+
+[build-system]
+requires = ["setuptools>=64.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["stac_insitu"]
+
+[tool.setuptools_scm]
+fallback_version = "9999"
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+float_to_top = true
+default_section = "THIRDPARTY"
+known_first_party = "stac_insitu"

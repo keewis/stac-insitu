@@ -1,1 +1,12 @@
+# editor cache files
+*~
+\#*\#
+
+# python byte code
+*.py[cod]
+
+# all json files
 *.json
+
+# jupyter cache directories
+.ipynb_checkpoints/

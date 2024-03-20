@@ -2,6 +2,7 @@ import functools
 
 import folium
 import folium.plugins
+import shapely
 from tlz.functoolz import curry
 from tlz.itertoolz import groupby
 
@@ -33,9 +34,9 @@ def transform_to_timestamped_geojson(items, style_function):
     features = [
         {
             "type": "Feature",
-            "geometry": items.geometry,
+            "geometry": item.geometry,
             "properties": {
-                "times": items.properties["time"],
+                "times": item.properties["time"],
                 "style": style_function(None, extract_category(item.collection_id)),
             },
         }
@@ -74,7 +75,7 @@ def visualize_search(geometry, items, style_function=None, m=None):
     if style_function is None:
         style_function = lambda *args, **kwargs: {}
 
-    folium.GeoJson(geometry.geojson()).add_to(m)
+    folium.GeoJson(shapely.to_geojson(geometry)).add_to(m)
 
     for elem in visualize_items(items, style_function=style_function):
         elem.add_to(m)

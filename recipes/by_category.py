@@ -214,7 +214,7 @@ console.log("pipeline: constructing")
 recipe = (
     beam.Create(pattern.items())
     | RemoveBrokenSensors(broken=broken_sensors)
-    | SelectCategories(select=["MO", "TG", "BO", "DB", "DC", "FB", "TS"])
+    | SelectCategories(select=["MO", "TG", "BO", "DB", "DC", "TS"])
     | OpenURLWithFSSpec()
     | OpenWithXarray(file_type=pattern.file_type)
     | CreateStacItem(

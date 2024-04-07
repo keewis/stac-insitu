@@ -193,14 +193,14 @@ console.print(
 )
 
 data_root = "https://data-marineinsitu.ifremer.fr/glo_multiparameter_nrt/monthly"
-out_root = pathlib.Path.home() / "work/data/insitu/catalogs/by_category"
+out_root = pathlib.Path.home() / "work/data/insitu/catalogs/cmems-insitu-tac"
 out_root.mkdir(parents=True, exist_ok=True)
 cache_dir = out_root / "cache/urls"
 cache_dir.mkdir(exist_ok=True, parents=True)
 
 with console.status("querying file urls"):
     console.log("file urls: querying the data server")
-    urls = glob_files(fs, f"{data_root}/**/*.nc", cache_dir)
+    urls = glob_files(fs, f"{data_root}/**/20230[4-5]/*.nc", cache_dir)
     console.log(f"file urls: found {len(urls)} files")
 
 broken_sensors = {

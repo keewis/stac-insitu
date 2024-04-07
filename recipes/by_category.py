@@ -86,7 +86,7 @@ def generate_item_template(ds):
         "collection": parts["category"],
     }
     if time is not None:
-        properties["time"] = time
+        properties["datetimes"] = time
 
     item = pystac.Item(
         item_id,

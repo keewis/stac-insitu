@@ -8,7 +8,7 @@ from tlz.itertoolz import remove
 def extract_trajectory(item):
     geometry = item.geometry
     coordinates = shapely.points(geometry["coordinates"])
-    time = pd.to_datetime(item.properties["time"], format="ISO8601").astype(
+    time = pd.to_datetime(item.properties["datetimes"], format="ISO8601").astype(
         "datetime64[s]"
     )
 

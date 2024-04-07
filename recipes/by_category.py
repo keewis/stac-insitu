@@ -207,7 +207,7 @@ broken_sensors = {
     "BO_LYTN",
 }
 
-pattern = FilePattern.from_sequence(urls[::100], file_type="netcdf4")
+pattern = FilePattern.from_sequence(urls, file_type="netcdf4")
 console.log("file urls: assembled pattern")
 
 console.log("pipeline: constructing")

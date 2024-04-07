@@ -10,7 +10,9 @@ from tlz.itertoolz import groupby
 def itemwise(func):
     @functools.wraps(func)
     def wrapper(items, **kwargs):
-        yield from map(curry(func, **kwargs))
+        yield from map(curry(func, **kwargs), items)
+
+    return wrapper
 
 
 def extract_category(id):

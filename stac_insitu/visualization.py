@@ -38,7 +38,7 @@ def transform_to_timestamped_geojson(items, style_function):
             "type": "Feature",
             "geometry": item.geometry,
             "properties": {
-                "times": item.properties["time"],
+                "times": item.properties["datetimes"],
                 "style": style_function(None, extract_category(item.collection_id)),
             },
         }
@@ -53,7 +53,7 @@ def transform_to_timestamped_geojson(items, style_function):
 
 def visualize_items(items, style_function):
     def categorize(item):
-        if "time" in item.properties and item.geometry["type"] == "LineString":
+        if "datetimes" in item.properties and item.geometry["type"] == "LineString":
             return "trajectory"
         else:
             return "geojson"

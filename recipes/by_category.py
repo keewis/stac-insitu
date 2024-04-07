@@ -154,7 +154,7 @@ def intact_sensor(item: tuple[str, str], broken: set[str]):
 
     _, name = url.rsplit("/", maxsplit=1)
 
-    return any(pattern in name for pattern in broken)
+    return not any(pattern in name for pattern in broken)
 
 
 @dataclass
@@ -172,7 +172,7 @@ def select_categories(item: tuple[str, str], select: set[str], drop: set[str]):
 
     category = url.rsplit("/", maxsplit=3)[1]
 
-    return category in select or category not in drop
+    return category in select and category not in drop
 
 
 @dataclass

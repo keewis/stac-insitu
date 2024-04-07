@@ -25,7 +25,7 @@ def transform_to_geojson(item, style_function):
 
     marker = folium.CircleMarker()
 
-    yield folium.GeoJson(
+    return folium.GeoJson(
         item.geometry,
         style_function=curry(style_function, category=category),
         marker=marker,

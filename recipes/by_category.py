@@ -5,20 +5,16 @@ Dashboard at: https://marineinsitu.eu/dashboard/
 Data server: https://data-marineinsitu.ifremer.fr
 """
 
-import datetime as dt
-import hashlib
-import json
 import pathlib
 import re
 from dataclasses import dataclass, field
 
 import apache_beam as beam
 import fsspec
-import movingpandas as mpd
 import pystac
-import shapely
-from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.runners.dask.dask_runner import DaskRunner
+
+# from apache_beam.options.pipeline_options import PipelineOptions
+# from apache_beam.runners.dask.dask_runner import DaskRunner
 from pangeo_forge_recipes.transforms import OpenURLWithFSSpec, OpenWithXarray
 from rich.console import Console
 from stac_recipes.patterns import FilePattern
@@ -28,8 +24,9 @@ from stac_recipes.transforms import (
     CreateStacItem,
     ToStaticJson,
 )
-from tlz.functoolz import curry, do
+from tlz.functoolz import curry
 
+from stac_insitu.geometry import extract_geometry
 from stac_insitu.io import glob_files
 
 console = Console()
@@ -68,57 +65,6 @@ def tokenize_filename(url):
     return match.groupdict()
 
 
-def generalize_trajectory(traj, tolerance, point_threshold):
-    linestring = traj.to_linestring()
-    if linestring.convex_hull.area < point_threshold:
-        simplified = linestring.convex_hull
-        if simplified.geom_type == "Point":
-            geometry = simplified.buffer(tolerance)
-        else:
-            geometry = simplified
-
-        time = None
-    else:
-        simplified = mpd.DouglasPeuckerGeneralizer(traj).generalize(tolerance)
-        geometry = simplified.to_linestring()
-        time = simplified.df.index.map(lambda ts: ts.isoformat()).to_list()
-
-    return geometry, time
-
-
-def extract_trajectory(ds, tolerance, point_threshold):
-    id = ds["TRAJECTORY"].item().decode()
-    coords = ds[["LONGITUDE", "LATITUDE", "TIME"]].drop_vars(
-        ["TRAJECTORY"], errors="ignore"
-    )
-
-    df = (
-        coords.rename_dims({dim: dim.lower() for dim in coords.dims})
-        .rename_vars({name: name.lower() for name in coords.variables})
-        .to_dataframe()
-    )
-
-    if len(df) > 1:
-        traj = mpd.Trajectory(
-            df, x="longitude", y="latitude", traj_id=id, crs="epsg:4326"
-        )
-
-        try:
-            geometry, time = generalize_trajectory(traj, tolerance, point_threshold)
-        except RuntimeError:
-            print("broken trajectory:", ds.encoding["source"])
-            raise
-
-        return json.loads(shapely.to_geojson(geometry)), time
-
-    data = df.reset_index().to_dict()
-    x = data["longitude"][0]
-    y = data["latitude"][0]
-    geometry = shapely.Point(x, y)
-
-    return json.loads(shapely.to_geojson(geometry)), None
-
-
 def generate_item_template(ds):
     url = ds.encoding["source"]
     parts = tokenize_filename(url)
@@ -130,7 +76,9 @@ def generate_item_template(ds):
         float(ds.attrs["geospatial_lon_max"]),
         float(ds.attrs["geospatial_lat_max"]),
     ]
-    geometry, time = extract_trajectory(ds, tolerance=0.001, point_threshold=1e-4)
+    geometry, time = extract_geometry(
+        ds, tolerance=0.001, x="LONGITUDE", y="LATITUDE", time="TIME"
+    )
 
     properties = {
         "start_datetime": None,
@@ -161,6 +109,7 @@ def generate_item_template(ds):
 
 def postprocess_item(item, ds):
     item.extra_fields |= ds.attrs
+
     return item
 
 

@@ -21,6 +21,10 @@ def extract_trajectory(item):
 
 def filter_trajectories(items, geometry, timespan):
     def predicate(item):
+        if "datetimes" not in item.properties:
+            # not a trajectory, assume this item is stationary
+            return False
+
         traj = extract_trajectory(item)
 
         segment = traj.get_segment_between(*pd.to_datetime(timespan))

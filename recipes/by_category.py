@@ -193,6 +193,7 @@ console.print(
 )
 
 data_root = "https://data-marineinsitu.ifremer.fr/glo_multiparameter_nrt/monthly"
+# TODO: figure out how to allow customizing this (maybe we can make use of `pangeo-forge-runner`?)
 out_root = pathlib.Path.home() / "work/data/insitu/catalogs/cmems-insitu-tac"
 out_root.mkdir(parents=True, exist_ok=True)
 cache_dir = out_root / "cache/urls"

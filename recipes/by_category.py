@@ -45,7 +45,7 @@ category_names = {
     "sd": "saildrones",
     "sm": "sea mammals",
     "tg": "tide gauges",
-    "ts": "thremosalinometer",
+    "ts": "thermosalinometer",
     "tx": "thermistor chains",
     "xb": "expendable bathythermographs (XBT)",
 }
